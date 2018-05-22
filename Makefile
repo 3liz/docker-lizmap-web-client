@@ -3,12 +3,12 @@
 #
 #
 
-NAME=lizmap-wps-web-client
+NAME=lizmap-web-client
 
 BUILDID=$(shell date +"%Y%m%d%H%M")
 COMMITID=$(shell git rev-parse --short HEAD)
 
-VERSION=3.2pre
+VERSION=3.2beta
 VERSION_SHORT=3.2
 
 VERSION_TAG=$(VERSION)
