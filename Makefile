@@ -49,10 +49,13 @@ test:
 archive:
 	docker save $(BUILDIMAGE) | bzip2 > $(FACTORY_ARCHIVE_PATH)/$(ARCHIVENAME).bz2
 
-deliver:
-	docker tag $(BUILDIMAGE) $(REGISTRY_URL)/$(NAME):latest
-	docker tag $(BUILDIMAGE) $(REGISTRY_URL)/$(NAME):$(VERSION)
-	docker tag $(BUILDIMAGE) $(REGISTRY_URL)/$(NAME):$(VERSION_SHORT)
+tag:
+	docker tag $(BUILDIMAGE) $(REGISTRY_PREFIX)$(NAME):latest
+	docker tag $(BUILDIMAGE) $(REGISTRY_PREFIX)$(NAME):$(VERSION)
+	docker tag $(BUILDIMAGE) $(REGISTRY_PREFIX)$(NAME):$(VERSION_SHORT)
+
+
+deliver: tag
 	docker push $(REGISTRY_URL)/$(NAME):latest
 	docker push $(REGISTRY_URL)/$(NAME):$(VERSION)
 	docker push $(REGISTRY_URL)/$(NAME):$(VERSION_SHORT)
