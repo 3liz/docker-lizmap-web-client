@@ -48,8 +48,11 @@ sed -i "/^cacheRedisHost=/c\cacheRedisHost=${LIZMAP_CACHEREDISHOST}" lizmap/var/
 [ ! -z "$LIZMAP_CACHEREDISKEYPREFIX" ] && sed -i "/^cacheRedisKeyPrefix=/c\cacheRedisKeyPrefix=${LIZMAP_CACHEREDISKEYPREFIX}"  lizmap/var/config/lizmapConfig.ini.php
 
 # Set up WPS configuration
-sed -i "/^wps_rootUrl=/c\wps_rootUrl=${LIZMAP_WPS_URL}"      lizmap/var/config/localconfig.ini.php
-sed -i "/^ows_url=/c\ows_url=${LIZMAP_WMSSERVERURL}" lizmap/var/config/localconfig.ini.php
+if [ ! -z "$LIZMAP_WPS_URL" ]; then
+sed -i "/^wp.access=/c\wps.access=2"                    lizmap/var/config/localconfig.ini.php
+sed -i "/^wps_rootUrl=/c\wps_rootUrl=${LIZMAP_WPS_URL}" lizmap/var/config/localconfig.ini.php
+sed -i "/^ows_url=/c\ows_url=${LIZMAP_WMSSERVERURL}"    lizmap/var/config/localconfig.ini.php
+fi
 
 # Redis WPS config
 sed -i "/^redis_host=/c\redis_host=${LIZMAP_CACHEREDISHOST}" lizmap/var/config/localconfig.ini.php
