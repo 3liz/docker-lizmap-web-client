@@ -8,10 +8,7 @@ NAME=lizmap-web-client
 BUILDID=$(shell date +"%Y%m%d%H%M")
 COMMITID=$(shell git rev-parse --short HEAD)
 
-VERSION=3.2rc4
-VERSION_SHORT=3.2
-
-VERSION_TAG=$(VERSION)
+VERSION:=3.2rc4
 
 LIZMAP_BRANCH:=3.2rc4
 LIZMAP_WPS_BRANCH:=master
@@ -24,8 +21,8 @@ REGISTRY_PREFIX=$(REGISTRY_URL)/
 BUILD_ARGS += --build-arg REGISTRY_PREFIX=$(REGISTRY_PREFIX)
 endif
 
-BUILDIMAGE=$(NAME):$(VERSION_TAG)-$(COMMITID)
-ARCHIVENAME=$(shell echo $(NAME):$(VERSION_TAG)|tr '[:./]' '_')
+BUILDIMAGE=$(NAME):$(VERSION)-$(COMMITID)
+ARCHIVENAME=$(shell echo $(NAME):$(VERSION)|tr '[:./]' '_')
 
 MANIFEST=factory.manifest
 
@@ -34,11 +31,14 @@ all:
 
 manifest:
 	echo name=$(NAME) > $(MANIFEST) && \
-    echo version=$(VERSION)   >> $(MANIFEST) && \
-    echo version_short=$(VERSION_SHORT) >> $(MANIFEST) && \
-    echo buildid=$(BUILDID)   >> $(MANIFEST) && \
-    echo commitid=$(COMMITID) >> $(MANIFEST) && \
-    echo archive=$(ARCHIVENAME) >> $(MANIFEST)
+echo version=$(VERSION)   >> $(MANIFEST) && \
+echo buildid=$(BUILDID)   >> $(MANIFEST) && \
+echo commitid=$(COMMITID) >> $(MANIFEST) && \
+echo archive=$(ARCHIVENAME) >> $(MANIFEST)
+ifdef VERSION_SHORT
+	echo version_short=$(VERSION_SHORT) >> $(MANIFEST)
+endif
+
 
 build: manifest
 	docker build --rm --force-rm --no-cache $(BUILD_ARGS) -t $(BUILDIMAGE) .
@@ -50,15 +50,16 @@ archive:
 	docker save $(BUILDIMAGE) | bzip2 > $(FACTORY_ARCHIVE_PATH)/$(ARCHIVENAME).bz2
 
 tag:
-	docker tag $(BUILDIMAGE) $(REGISTRY_PREFIX)$(NAME):latest
 	docker tag $(BUILDIMAGE) $(REGISTRY_PREFIX)$(NAME):$(VERSION)
+ifdef VERSION_SHORT
 	docker tag $(BUILDIMAGE) $(REGISTRY_PREFIX)$(NAME):$(VERSION_SHORT)
-
+endif
 
 deliver: tag
-	docker push $(REGISTRY_URL)/$(NAME):latest
 	docker push $(REGISTRY_URL)/$(NAME):$(VERSION)
+ifdef VERSION_SHORT
 	docker push $(REGISTRY_URL)/$(NAME):$(VERSION_SHORT)
+endif
 
 clean:
 	docker rmi -f $(shell docker images $(BUILDIMAGE) -q)
