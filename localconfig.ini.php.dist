@@ -14,5 +14,10 @@ redis_port=6379
 redis_db=1
 redis_key_prefix=wpslizmap
 
-
+[urlengine]
+;checkHttpsOnParsing=
+;forceProxyProtocol=
+;domainName=
+;basePath=
+;backendBasePath=
 

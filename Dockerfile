@@ -31,8 +31,8 @@ RUN git clone --branch $lizmap_wps_version --depth=1 $lizmap_wps_git lizmap-wps 
 
 COPY factory.manifest /build.manifest
 COPY lizmapConfig.ini.php.dist localconfig.ini.php.dist /www/lizmap/var/config.dist/
-COPY lizmap-entrypoint.sh /bin/ 
-RUN chmod 755 /bin/lizmap-entrypoint.sh
+COPY lizmap-entrypoint.sh update-config.php /bin/ 
+RUN chmod 755 /bin/lizmap-entrypoint.sh /bin/update-config.php
 
 WORKDIR /www
 ENTRYPOINT ["/bin/lizmap-entrypoint.sh"]

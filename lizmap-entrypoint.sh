@@ -16,11 +16,10 @@ LIZMAP_USER=${LIZMAP_USER:-9001}
 
 # Copy config files to mount point
 cp -aR lizmap/var/config.dist/* lizmap/var/config
-if [ ! -f lizmap/var/config/lizmapConfig.ini.php ]; then
-    cp lizmap/var/config/lizmapConfig.ini.php.dist lizmap/var/config/lizmapConfig.ini.php
-    cp lizmap/var/config/localconfig.ini.php.dist  lizmap/var/config/localconfig.ini.php
-    cp lizmap/var/config/profiles.ini.php.dist     lizmap/var/config/profiles.ini.php
-fi 
+[ ! -f lizmap/var/config/lizmapConfig.ini.php ] && cp lizmap/var/config/lizmapConfig.ini.php.dist lizmap/var/config/lizmapConfig.ini.php
+[ ! -f lizmap/var/config/localconfig.ini.php  ] && cp lizmap/var/config/localconfig.ini.php.dist  lizmap/var/config/localconfig.ini.php
+[ ! -f lizmap/var/config/profiles.ini.php     ] && cp lizmap/var/config/profiles.ini.php.dist     lizmap/var/config/profiles.ini.php
+
 
 # Copy static files
 # Note: static files needs to be resolved by external web server
@@ -47,21 +46,10 @@ sed -i "/^cacheRedisHost=/c\cacheRedisHost=${LIZMAP_CACHEREDISHOST}" lizmap/var/
 [ ! -z "$LIZMAP_CACHEREDISDB" ]        && sed -i "/^cacheRedisDb=/c\cacheRedisDb=${LIZMAP_CACHEREDISDB}"             lizmap/var/config/lizmapConfig.ini.php
 [ ! -z "$LIZMAP_CACHEREDISKEYPREFIX" ] && sed -i "/^cacheRedisKeyPrefix=/c\cacheRedisKeyPrefix=${LIZMAP_CACHEREDISKEYPREFIX}"  lizmap/var/config/lizmapConfig.ini.php
 
-# Set up WPS configuration
-if [ ! -z "$LIZMAP_WPS_URL" ]; then
-sed -i "/^wp.access=/c\wps.access=2"                    lizmap/var/config/localconfig.ini.php
-sed -i "/^wps_rootUrl=/c\wps_rootUrl=${LIZMAP_WPS_URL}" lizmap/var/config/localconfig.ini.php
-sed -i "/^ows_url=/c\ows_url=${LIZMAP_WMSSERVERURL}"    lizmap/var/config/localconfig.ini.php
-fi
-
-# Redis WPS config
-sed -i "/^redis_host=/c\redis_host=${LIZMAP_CACHEREDISHOST}" lizmap/var/config/localconfig.ini.php
-# Optional config
-[ ! -z "$LIZMAP_CACHEREDISPORT" ]  && sed -i "/^redis_port=/c\redis_port=${LIZMAP_CACHEREDISPORT}"   lizmap/var/config/localconfig.ini.php
-[ ! -z "$LIZMAP_CACHEREDISDB" ]    && sed -i "/^redis_db=/c\redis_db=${LIZMAP_CACHEREDISDB}"         lizmap/var/config/localconfig.ini.php
+# Update localconfig
+update-config.php
 
 # Set up Configuration  
-
 php lizmap/install/installer.php
 
 # Set owner/and group
