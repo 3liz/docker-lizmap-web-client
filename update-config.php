@@ -4,7 +4,9 @@
 function update_ini_file($filename, $update) {
 
     $config = $update(parse_ini_file($filename, true));
-    $body = ";<?php die(''); ?>"."\n".";for security reasons , don't remove or modify the first line"."\n\n\n";
+    $body  = ";<?php die(''); ?>\n;for security reasons , don't remove or modify the first line\n";
+    $body .= ";LAST UPDATED: ".date(DATE_RFC2822)."\n\n";
+
     foreach ($config as $section => $content) {
         $content = array_map(function($val,$key) {
             return "$key=$val";
