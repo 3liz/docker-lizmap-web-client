@@ -7,7 +7,15 @@ function update_ini_file($filename, $update) {
     $body  = ";<?php die(''); ?>\n;for security reasons , don't remove or modify the first line\n";
     $body .= ";LAST UPDATED: ".date(DATE_RFC2822)."\n\n";
 
+    // write global variable
     foreach ($config as $section => $content) {
+        if(!is_array($content)) {
+            $body .= "$section=$content\n";
+        }
+    }
+
+    foreach ($config as $section => $content) {
+        if(!is_array($content)) continue;
         $content = array_map(function($val,$key) {
             return "$key=$val";
         },array_values($content),array_keys($content));
@@ -17,7 +25,7 @@ function update_ini_file($filename, $update) {
     file_put_contents($filename, $body);    
 }
 
-# Update localconfig 
+// Update localconfig 
 update_ini_file( 'lizmap/var/config/localconfig.ini.php', function($config) {
 
 // Set up WPS configuration
@@ -37,9 +45,14 @@ if ( getenv("LIZMAP_WPS_URL") ) {
 
 // Set urlengine config
 unset($config['urlengine']);
+unset($config['forceHTTPSPort']);
+
 if(getenv('LIZMAP_PROXYURL_PROTOCOL')) {
     $config['urlengine']['checkHttpsOnParsing'] = 'off';
     $config['urlengine']['forceProxyProtocol']  = getenv('LIZMAP_PROXYURL_PROTOCOL');
+    // By default, use the 443 https port  
+    if(getenv('LIZMAP_PROXYURL_HTTPS_PORT')) $config['forceHTTPSPort'] = getenv('LIZMAP_PROXYURL_HTTPS_PORT');
+    else $config['forceHTTPSPort'] = '443';
 }
 
 if(getenv('LIZMAP_PROXYURL_DOMAIN'))      $config['urlengine']['domainName']  = getenv('LIZMAP_PROXYURL_DOMAIN');
