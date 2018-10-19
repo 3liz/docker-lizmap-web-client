@@ -55,8 +55,9 @@ php lizmap/install/installer.php
 # Set owner/and group
 sh lizmap/install/set_rights.sh $LIZMAP_USER $LIZMAP_USER
 
-# No need to clean tmp
-#sh lizmap/install/clean_vartmp.sh
+# Clean cache files in case we are 
+# Restarting the container
+sh lizmap/install/clean_vartmp.sh
 
 # Create link to lizmap prefix
 mkdir -p $(dirname $LIZMAP_HOME)
