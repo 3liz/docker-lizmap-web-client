@@ -18,7 +18,8 @@ RUN apk --no-cache add git \
     && apk add --no-cache --update php7-redis@php
 
 # Install lizmap web client
-RUN git clone --branch $lizmap_version --depth=1  $lizmap_git lizmap-web-client \
+RUN echo "cloning $lizmap_version from $lizmap_git" \
+    && git clone --branch $lizmap_version --depth=1  $lizmap_git lizmap-web-client \
     && rm -rf lizmap-web-client/vagrant lizmap-web-client/.git \
     && mv lizmap-web-client /www \
     && mv /www/lizmap/var/config /www/lizmap/var/config.dist \
