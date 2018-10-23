@@ -8,9 +8,9 @@ NAME=lizmap-web-client
 BUILDID=$(shell date +"%Y%m%d%H%M")
 COMMITID=$(shell git rev-parse --short HEAD)
 
-VERSION:=3.2rc4
+VERSION:=3.2rc5
 
-LIZMAP_BRANCH:=3.2rc4
+LIZMAP_BRANCH:=3.2rc5
 LIZMAP_WPS_BRANCH:=master
 
 BUILD_ARGS=--build-arg lizmap_version=$(LIZMAP_BRANCH) \
