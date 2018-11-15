@@ -55,9 +55,9 @@ if(getenv('LIZMAP_PROXYURL_PROTOCOL')) {
     else $config['forceHTTPSPort'] = '443';
 }
 
-if(getenv('LIZMAP_PROXYURL_DOMAIN'))      $config['urlengine']['domainName']  = getenv('LIZMAP_PROXYURL_DOMAIN');
-if(getenv('LIZMAP_PROXYURL_BASEPATH'))    $config['urlengine']['basePath']    = getenv('LIZMAP_PROXYURL_BASEPATH');
-if(getenv('LIZMAP_PROXYURL_BACKENDPATH')) $config['urlengine']['backendPath'] = getenv('LIZMAP_PROXYURL_BACKENDPATH');
+if(getenv('LIZMAP_PROXYURL_DOMAIN'))          $config['urlengine']['domainName']      = getenv('LIZMAP_PROXYURL_DOMAIN');
+if(getenv('LIZMAP_PROXYURL_BASEPATH'))        $config['urlengine']['basePath']        = getenv('LIZMAP_PROXYURL_BASEPATH');
+if(getenv('LIZMAP_PROXYURL_BACKENDBASEPATH')) $config['urlengine']['backendBasePath'] = getenv('LIZMAP_PROXYURL_BACKENDBASEPATH');
 
 return $config;
 
