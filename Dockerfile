@@ -1,7 +1,7 @@
 ARG REGISTRY_PREFIX=''
 FROM ${REGISTRY_PREFIX}php:7.2.10-fpm-alpine3.8
 MAINTAINER David Marteau <david.marteau@3liz.com>
-LABEL Description="Lizmap web client" Vendor="3liz.org" Version="3.2"
+LABEL Description="Lizmap web client" Vendor="3liz.org"
 
 ARG lizmap_version=master
 ARG lizmap_git=https://github.com/3liz/lizmap-web-client.git
