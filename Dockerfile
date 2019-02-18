@@ -10,12 +10,15 @@ ARG lizmap_wps_version=master
 ARG lizmap_wps_git=https://github.com/3liz/lizmap-wps-web-client-module.git 
 
 # trust this project public key to trust the packages.
-ADD https://php.codecasts.rocks/php-alpine.rsa.pub /etc/apk/keys/php-alpine.rsa.pub
+## NOTE: php.codecasts.rocks is no reliable (error 522)
+## ADD https://php.codecasts.rocks/php-alpine.rsa.pub /etc/apk/keys/php-alpine.rsa.pub
 
-RUN apk --no-cache add git \
-    && echo "@php http://php.codecasts.rocks/v3.8/php-7.2" >> /etc/apk/repositories \
-    && apk add --no-cache --update php7@php \
-    && apk add --no-cache --update php7-redis@php
+## RUN apk --no-cache add git \
+##    && echo "@php http://php.codecasts.rocks/v3.8/php-7.2" >> /etc/apk/repositories \
+##    && apk add --no-cache --update php7@php \
+##    && apk add --no-cache --update php7-redis@php
+
+RUN apk --no-cache add git php7-redis
 
 # Install lizmap web client
 RUN echo "cloning $lizmap_version from $lizmap_git" \
