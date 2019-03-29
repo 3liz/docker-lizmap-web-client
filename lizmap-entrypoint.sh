@@ -5,12 +5,10 @@ set -x
 
 LIZMAP_USER=${LIZMAP_USER:-9001}
 
-#function failenv () {
-#    echo "Required variable $1 not defined"
-#    exit 1
-#}
-
-# Check required configuration variables
+# php ini override
+if [ ! -z PHP_INI ]; then
+    echo -e "$PHP_INI" > $PHP_INI_DIR/conf.d/lizmap-php.ini
+fi
 
 # lizmapConfig.ini.php.dist
 
@@ -63,7 +61,7 @@ sh lizmap/install/clean_vartmp.sh
 mkdir -p $(dirname $LIZMAP_HOME)
 ln -sf /www/lizmap $LIZMAP_HOME
 
-# Configure php-fpm
+# Override php-fpm configuration
 sed -i "/^user =/c\user = ${LIZMAP_USER}"   /usr/local/etc/php-fpm.d/www.conf
 sed -i "/^group =/c\group = ${LIZMAP_USER}" /usr/local/etc/php-fpm.d/www.conf
 

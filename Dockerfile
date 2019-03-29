@@ -1,5 +1,5 @@
 ARG REGISTRY_PREFIX=''
-FROM ${REGISTRY_PREFIX}php:7.2.10-fpm-alpine3.8
+FROM ${REGISTRY_PREFIX}php:7.2.16-fpm-alpine3.9
 MAINTAINER David Marteau <david.marteau@3liz.com>
 LABEL Description="Lizmap web client" Vendor="3liz.org"
 
@@ -32,6 +32,9 @@ RUN echo "cloning $lizmap_version from $lizmap_git" \
 RUN git clone --branch $lizmap_wps_version --depth=1 $lizmap_wps_git lizmap-wps \
     && mv lizmap-wps/wps /www/lizmap/lizmap-modules/wps \
     && rm -rf lizmap-wps
+
+# Use the default production configuration
+RUN mv $PHP_INI_DIR/php.ini-production $PHP_INI_DIR/php.ini
 
 COPY factory.manifest /build.manifest
 COPY lizmapConfig.ini.php.dist localconfig.ini.php.dist /www/lizmap/var/config.dist/
