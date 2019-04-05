@@ -1,0 +1,84 @@
+stages:
+  - build
+  - deploy
+  - release
+
+.only_changes: &changes_def
+    changes:
+      - Dockerfile
+      - Makefile
+      - lizmap-entrypoint.sh
+      - "*.php"
+      - "*.php.dist"
+
+build:release:
+  stage: build
+  script:
+    - make build deliver clean VERSION=3.2.2 VERSION_SHORT=3.2
+  environment:
+    name: snap
+  only:
+    <<: *changes_def
+    refs:
+      - tags
+  artifacts:
+    paths:
+      - factory.manifest
+  tags:
+    - infrav3
+
+build:rc:
+  stage: build
+  script:
+    - make build deliver clean VERSION=3.2-rc LIZMAP_BRANCH=release_3_2
+  environment:
+    name: snap
+  only:
+    <<: *changes_def
+    refs:
+      - schedules
+  tags:
+    - infrav3
+
+build:dev:
+  stage: build
+  script:
+    - make build deliver clean VERSION=dev LIZMAP_BRANCH=master
+  environment:
+    name: snap
+  only:
+    <<: *changes_def
+    refs:
+      - schedules
+  tags:
+    - infrav3
+
+deploy_snap:
+  stage: deploy
+  script:
+    - $HOME/bin/lzmservicectl update lizmap upgrade
+  environment:
+    name: snap
+  only:
+    <<: *changes_def
+  tags:
+    - infrav3
+
+release:
+  stage: release
+  script:
+    - $FACTORY_SCRIPTS/release-image.sh lizmap-web-client
+    - $FACTORY_SCRIPTS/push-to-docker-hub.sh
+  environment:
+    name: production
+  dependencies:
+    - build:release
+  when: manual
+  tags:
+    - infrav3
+  only:
+    - tags
+
+
+
+
