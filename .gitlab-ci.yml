@@ -31,6 +31,7 @@ build:rc:
   stage: build
   script:
     - make build deliver clean VERSION=3.3-rc LIZMAP_BRANCH=release_3_3
+    - $FACTORY_SCRIPTS/push-to-docker-hub.sh
   environment:
     name: snap
   only:
