@@ -10,7 +10,6 @@ stages:
       - lizmap-entrypoint.sh
       - "*.php"
       - "*.php.dist"
-      - ".gitlab-ci.yml"
 
 build:release:
   stage: build
