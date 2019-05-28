@@ -38,6 +38,9 @@ build:rc:
     <<: *changes_def
     refs:
       - schedules
+  artifacts:
+    paths:
+      - factory.manifest
   tags:
     - infrav3
 
@@ -79,6 +82,20 @@ release:
     - infrav3
   only:
     - tags
+
+release_rc:
+  stage: release
+  script:
+    - $FACTORY_SCRIPTS/release-image.sh lizmap-web-client-rc
+  environment:
+    name: production
+  dependencies:
+    - build:rc
+  when: manual
+  tags:
+    - infrav3
+  only:
+    - schedules
 
 
 
