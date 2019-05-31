@@ -18,7 +18,14 @@ ARG lizmap_wps_git=https://github.com/3liz/lizmap-wps-web-client-module.git
 ##    && apk add --no-cache --update php7@php \
 ##    && apk add --no-cache --update php7-redis@php
 
-RUN apk --no-cache add git php7-redis
+RUN apk --no-cache add git \
+    php7-redis \
+    php7-pgsql \ 
+    php7-sqlite3 \
+    php7-gd \
+    php7-xml \
+    php7-xmlrpc \
+    php7-curl
 
 # Install lizmap web client
 RUN echo "cloning $lizmap_version from $lizmap_git" \
