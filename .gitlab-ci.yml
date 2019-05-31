@@ -19,8 +19,8 @@ build:release:
     name: snap
   only:
     <<: *changes_def
-    refs:
-      - tags
+  except:
+    - schedules
   artifacts:
     paths:
       - factory.manifest
@@ -80,8 +80,8 @@ release:
   when: manual
   tags:
     - infrav3
-  only:
-    - tags
+  except:
+    - schedules
 
 release_rc:
   stage: release
