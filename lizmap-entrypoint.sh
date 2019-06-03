@@ -65,15 +65,15 @@ ln -sf /www/lizmap $LIZMAP_HOME
 sed -i "/^user =/c\user = ${LIZMAP_USER}"   /etc/php7/php-fpm.d/www.conf
 sed -i "/^group =/c\group = ${LIZMAP_USER}" /etc/php7/php-fpm.d/www.conf
 
-# Create a php-fpm link for compatibility
-ln -sf /usr/sbin/php-fpm7 /usr/local/bin/php-fpm 
-
-# Do no start as deamon
-sed -i "/^;daemonize = yes/c\daemonize = no"  /etc/php7/php-fpm.conf
-
 # first arg is `-f` or `--some-option`
 if [ "${1#-}" != "$1" ]; then
-	set -- php-fpm7 -F "$@"
+	set -- php-fpm7 -F -O "$@"
+fi
+
+# For compatibility
+if [ $1 == "php-fpm" ]; then
+    shift
+    set -- php-fpm7 -F -O "$@"
 fi
 
 exec "$@"

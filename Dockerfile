@@ -44,7 +44,7 @@ ENV PHP_INI_DIR /etc/php7
 
 WORKDIR /www
 ENTRYPOINT ["/bin/lizmap-entrypoint.sh"]
-CMD ["/usr/sbin/php-fpm7", "-F"]
+CMD ["/usr/sbin/php-fpm7", "-F", "-O"]
 
 
 
