@@ -7,7 +7,7 @@ LIZMAP_USER=${LIZMAP_USER:-9001}
 
 # php ini override
 if [ ! -z PHP_INI ]; then
-    echo -e "$PHP_INI" > $PHP_INI_DIR/conf.d/lizmap-php.ini
+    echo -e "$PHP_INI" > $PHP_INI_DIR/conf.d/lizmap-php-0.ini
 fi
 
 # lizmapConfig.ini.php.dist
@@ -62,8 +62,19 @@ mkdir -p $(dirname $LIZMAP_HOME)
 ln -sf /www/lizmap $LIZMAP_HOME
 
 # Override php-fpm configuration
-sed -i "/^user =/c\user = ${LIZMAP_USER}"   /usr/local/etc/php-fpm.d/www.conf
-sed -i "/^group =/c\group = ${LIZMAP_USER}" /usr/local/etc/php-fpm.d/www.conf
+sed -i "/^user =/c\user = ${LIZMAP_USER}"   /etc/php7/php-fpm.d/www.conf
+sed -i "/^group =/c\group = ${LIZMAP_USER}" /etc/php7/php-fpm.d/www.conf
 
-exec docker-php-entrypoint $@
+# Create a php-fpm link for compatibility
+ln -sf /usr/sbin/php-fpm7 /usr/local/bin/php-fpm 
+
+# Do no start as deamon
+sed -i "/^;daemonize = yes/c\daemonize = no"  /etc/php7/php-fpm.conf
+
+# first arg is `-f` or `--some-option`
+if [ "${1#-}" != "$1" ]; then
+	set -- php-fpm7 -F "$@"
+fi
+
+exec "$@"
 
