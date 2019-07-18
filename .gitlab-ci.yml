@@ -60,7 +60,7 @@ build:dev:
 deploy_snap:
   stage: deploy
   script:
-    - $HOME/bin/lzmservicectl update --wait-timeout=500 lizmap upgrade
+    - $HOME/bin/lzmservicectl update -C MUTU lizmap
   environment:
     name: snap
   only:
