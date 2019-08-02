@@ -31,6 +31,9 @@ RUN apk --no-cache add git php7 php7-fpm \
     php7-xmlreader \
     php7-xmlwriter \
     php7-simplexml \
+    php7-phar \
+    php7-gettext \
+    php7-ctype \
     php7-zip \
     php7-ldap
 
