@@ -8,7 +8,7 @@ NAME=lizmap-web-client
 BUILDID=$(shell date +"%Y%m%d%H%M")
 COMMITID=$(shell git rev-parse --short HEAD)
 
-VERSION:=3.2.3
+VERSION:=3.2.5
 
 LIZMAP_BRANCH:=$(VERSION)
 LIZMAP_WPS_BRANCH:=master

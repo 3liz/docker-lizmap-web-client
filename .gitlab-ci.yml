@@ -14,7 +14,7 @@ stages:
 build:release:
   stage: build
   script:
-    - make build deliver clean VERSION=3.2.3 VERSION_SHORT=3.2
+    - make build deliver clean VERSION=3.2.5 VERSION_SHORT=3.2
   environment:
     name: snap
   only:
