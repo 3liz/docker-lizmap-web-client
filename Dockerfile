@@ -10,7 +10,7 @@ ARG lizmap_wps_version=master
 ARG lizmap_wps_git=https://github.com/3liz/lizmap-wps-web-client-module.git 
 
 RUN apk update && apk upgrade
-RUN apk --no-cache add git php7 php7-fpm \
+RUN apk --no-cache add git fcgi php7 php7-fpm \
     php7-tokenizer \
     php7-opcache \
     php7-session \
@@ -53,7 +53,10 @@ RUN git clone --branch $lizmap_wps_version --depth=1 $lizmap_wps_git lizmap-wps 
 COPY factory.manifest /build.manifest
 COPY lizmapConfig.ini.php.dist localconfig.ini.php.dist /www/lizmap/var/config.dist/
 COPY lizmap-entrypoint.sh update-config.php /bin/ 
-RUN chmod 755 /bin/lizmap-entrypoint.sh /bin/update-config.php
+## Install healtcheck script
+COPY php-fpm-healthcheck /usr/local/bin/
+
+RUN chmod 755 /bin/lizmap-entrypoint.sh /bin/update-config.php /usr/local/bin/php-fpm-healthcheck
 
 ENV PHP_INI_DIR /etc/php7
 

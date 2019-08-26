@@ -71,6 +71,9 @@ sed -i "/^pm.start_servers =/c\pm.start_servers = ${PM_START_SERVERS:-5}" /etc/p
 sed -i "/^pm.min_spare_servers =/c\pm.min_spare_servers = ${PM_MIN_SPARE_SERVERS:-5}" /etc/php7/php-fpm.d/www.conf
 sed -i "/^pm.max_spare_servers =/c\pm.max_spare_servers = ${PM_MAX_SPARE_SERVERS:-35}" /etc/php7/php-fpm.d/www.conf
 
+# Enable status path
+sed -i "/^;pm.status_path /c\pm.status_path = /status" /etc/php7/php-fpm.d/www.conf
+
 # first arg is `-f` or `--some-option`
 if [ "${1#-}" != "$1" ]; then
 	set -- php-fpm7 -F -O "$@"
