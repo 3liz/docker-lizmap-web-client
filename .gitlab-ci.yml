@@ -11,10 +11,26 @@ stages:
       - "*.php"
       - "*.php.dist"
 
+build:ltr:
+  stage: build
+  script:
+    - make build deliver clean VERSION=3.2.6 VERSION_SHORT=3.2 RELEASE_TAG=ltr
+  environment:
+    name: snap
+  only:
+    <<: *changes_def
+  except:
+    - schedules
+  artifacts:
+    paths:
+      - factory.manifest
+  tags:
+    - infrav3
+
 build:release:
   stage: build
   script:
-    - make build deliver clean VERSION=3.2.5 VERSION_SHORT=3.2
+    - make build deliver clean VERSION=3.3.0 VERSION_SHORT=3.3 RELEASE_TAG=latest
   environment:
     name: snap
   only:
@@ -30,7 +46,7 @@ build:release:
 build:rc:
   stage: build
   script:
-    - make build deliver clean VERSION=3.3-rc LIZMAP_BRANCH=release_3_3
+    - make build deliver clean VERSION=3.3-rc LIZMAP_BRANCH=release_3_3 RELEASE_TAG=rc
     - $FACTORY_SCRIPTS/push-to-docker-hub.sh
   environment:
     name: snap
@@ -68,6 +84,21 @@ deploy_snap:
   tags:
     - infrav3
 
+release:ltr:
+  stage: release
+  script:
+    - $FACTORY_SCRIPTS/release-image.sh lizmap-web-client-ltr
+    - $FACTORY_SCRIPTS/push-to-docker-hub.sh
+  environment:
+    name: production
+  dependencies:
+    - build:ltr
+  when: manual
+  tags:
+    - infrav3
+  except:
+    - schedules
+
 release:
   stage: release
   script:
@@ -83,7 +114,7 @@ release:
   except:
     - schedules
 
-release_rc:
+release:rc:
   stage: release
   script:
     - $FACTORY_SCRIPTS/release-image.sh lizmap-web-client-rc

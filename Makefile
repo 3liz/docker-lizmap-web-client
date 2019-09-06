@@ -8,7 +8,7 @@ NAME=lizmap-web-client
 BUILDID=$(shell date +"%Y%m%d%H%M")
 COMMITID=$(shell git rev-parse --short HEAD)
 
-VERSION:=3.2.5
+VERSION:=3.2.6
 
 LIZMAP_BRANCH:=$(VERSION)
 LIZMAP_WPS_BRANCH:=master
@@ -38,6 +38,10 @@ echo archive=$(ARCHIVENAME) >> $(MANIFEST)
 ifdef VERSION_SHORT
 	echo version_short=$(VERSION_SHORT) >> $(MANIFEST)
 endif
+ifdef RELEASE_TAG
+	echo release_tag=$(RELEASE_TAG) >> $(MANIFEST)
+endif
+
 
 
 build: manifest
@@ -54,6 +58,9 @@ tag:
 ifdef VERSION_SHORT
 	docker tag $(BUILDIMAGE) $(REGISTRY_PREFIX)$(NAME):$(VERSION_SHORT)
 endif
+ifdef RELEASE_TAG
+	docker tag $(BUILDIMAGE) $(REGISTRY_PREFIX)$(NAME):$(RELEASE_TAG)
+endif
 
 deliver: tag
 	docker push $(REGISTRY_URL)/$(NAME):$(VERSION)
@@ -62,8 +69,11 @@ ifdef VERSION_SHORT
 endif
 
 clean:
+	docker rmi -f $(BUILDIMAGE)
+
+clean-all:
 	docker rmi -f $(shell docker images $(BUILDIMAGE) -q)
-   
+
 LIZMAP_USER:=$(shell id -u)
 
 run:
