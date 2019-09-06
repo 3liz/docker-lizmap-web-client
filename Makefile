@@ -67,6 +67,9 @@ deliver: tag
 ifdef VERSION_SHORT
 	docker push $(REGISTRY_URL)/$(NAME):$(VERSION_SHORT)
 endif
+ifdef RELEASE_TAG
+	docker tag $(BUILDIMAGE) $(REGISTRY_PREFIX)$(NAME):$(RELEASE_TAG)
+endif
 
 clean:
 	docker rmi -f $(BUILDIMAGE)
