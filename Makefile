@@ -68,7 +68,7 @@ ifdef VERSION_SHORT
 	docker push $(REGISTRY_URL)/$(NAME):$(VERSION_SHORT)
 endif
 ifdef RELEASE_TAG
-	docker tag $(BUILDIMAGE) $(REGISTRY_PREFIX)$(NAME):$(RELEASE_TAG)
+	docker push $(REGISTRY_URL)/$(NAME):$(RELEASE_TAG)
 endif
 
 clean:
