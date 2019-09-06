@@ -27,6 +27,23 @@ build:ltr:
   tags:
     - infrav3
 
+build:nightly_ltr:
+  stage: build
+  script:
+    - make build deliver clean VERSION=ltr-nightly LIZMAP_BRANCH=release_3_2
+    - $FACTORY_SCRIPTS/push-to-docker-hub.sh
+  environment:
+    name: snap
+  only:
+    <<: *changes_def
+    refs:
+      - schedules
+  artifacts:
+    paths:
+      - factory.manifest
+  tags:
+    - infrav3
+
 build:release:
   stage: build
   script:
@@ -43,10 +60,10 @@ build:release:
   tags:
     - infrav3
 
-build:rc:
+build:nightly:
   stage: build
   script:
-    - make build deliver clean VERSION=3.3-rc LIZMAP_BRANCH=release_3_3 RELEASE_TAG=rc
+    - make build deliver clean VERSION=nightly LIZMAP_BRANCH=release_3_3
     - $FACTORY_SCRIPTS/push-to-docker-hub.sh
   environment:
     name: snap
@@ -113,21 +130,5 @@ release:
     - infrav3
   except:
     - schedules
-
-release:rc:
-  stage: release
-  script:
-    - $FACTORY_SCRIPTS/release-image.sh lizmap-web-client-rc
-  environment:
-    name: production
-  dependencies:
-    - build:rc
-  when: manual
-  tags:
-    - infrav3
-  only:
-    - schedules
-
-
 
 
