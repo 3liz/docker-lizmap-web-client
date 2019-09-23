@@ -16,6 +16,7 @@ The container deploy one lizmap instance and may run php-fpm on commande line.
 - LIZMAP\_CACHEREDISKEYPREFIX: the redis key prefix to use
 - LIZMAP\_USER: User used to run Lizmap
 - LIZMAP\_HOME: The root path for web files used from the web server
+- LIZMAP\_THEME: Lizmap theme to use
 
 **Important**: LIZMAP\_HOME is the prefix of the path towards lizmap web files (lizmap/www). This prefix
 must be identical to the one given in the nginx *root* directive, ex:

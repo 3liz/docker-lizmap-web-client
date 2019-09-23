@@ -59,6 +59,8 @@ if(getenv('LIZMAP_PROXYURL_DOMAIN'))          $config['urlengine']['domainName']
 if(getenv('LIZMAP_PROXYURL_BASEPATH'))        $config['urlengine']['basePath']        = getenv('LIZMAP_PROXYURL_BASEPATH');
 if(getenv('LIZMAP_PROXYURL_BACKENDBASEPATH')) $config['urlengine']['backendBasePath'] = getenv('LIZMAP_PROXYURL_BACKENDBASEPATH');
 
+if(getenv('LIZMAP_THEME')) $config['theme'] = getenv('LIZMAP_THEME');
+
 return $config;
 
 })
