@@ -93,7 +93,7 @@ build:dev:
 deploy_snap:
   stage: deploy
   script:
-    - $HOME/bin/lzmservicectl update -C MUTU lizmap
+    - $HOME/bin/lzmservicectl update -C MUTU lizmap  --annotate="Updated image ($CI_COMMIT_SHORT_SHA)"
   environment:
     name: snap
   only:
