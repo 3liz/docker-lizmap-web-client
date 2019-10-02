@@ -30,7 +30,7 @@ build:ltr:
 build:nightly_ltr:
   stage: build
   script:
-    - make build deliver clean VERSION=ltr-nightly LIZMAP_BRANCH=release_3_2
+    - make build deliver VERSION=ltr-nightly LIZMAP_BRANCH=release_3_2
     - $FACTORY_SCRIPTS/push-to-docker-hub.sh
     - make clean-all VERSION=ltr-nightly
   environment:
@@ -64,7 +64,7 @@ build:release:
 build:nightly:
   stage: build
   script:
-    - make build deliver clean VERSION=nightly LIZMAP_BRANCH=release_3_3
+    - make build deliver VERSION=nightly LIZMAP_BRANCH=release_3_3
     - $FACTORY_SCRIPTS/push-to-docker-hub.sh
     - make clean-all VERSION=nightly
   environment:

@@ -72,10 +72,10 @@ ifdef RELEASE_TAG
 endif
 
 clean:
-	docker rmi -f $(BUILDIMAGE)
+	docker rmi -f $(BUILDIMAGE) || true
 
 clean-all:
-	docker rmi -f $(shell docker images $(BUILDIMAGE) -q)
+	docker rmi -f $(shell docker images $(BUILDIMAGE) -q) || true
 
 LIZMAP_USER:=$(shell id -u)
 
