@@ -30,9 +30,8 @@ build:ltr:
 build:nightly_ltr:
   stage: build
   script:
-    - make build deliver VERSION=ltr-nightly LIZMAP_BRANCH=release_3_2
-    - $FACTORY_SCRIPTS/push-to-docker-hub.sh
-    - make clean-all VERSION=ltr-nightly
+    - make build deliver clean VERSION=ltr-nightly LIZMAP_BRANCH=release_3_2
+    - $FACTORY_SCRIPTS/push-to-docker-hub.sh --clean
   environment:
     name: snap
   only:
@@ -64,9 +63,8 @@ build:release:
 build:nightly:
   stage: build
   script:
-    - make build deliver VERSION=nightly LIZMAP_BRANCH=release_3_3
-    - $FACTORY_SCRIPTS/push-to-docker-hub.sh
-    - make clean-all VERSION=nightly
+    - make build deliver clean VERSION=nightly LIZMAP_BRANCH=release_3_3
+    - $FACTORY_SCRIPTS/push-to-docker-hub.sh --clean
   environment:
     name: snap
   only:
@@ -107,7 +105,7 @@ release:ltr:
   stage: release
   script:
     - $FACTORY_SCRIPTS/release-image.sh lizmap-web-client-ltr
-    - $FACTORY_SCRIPTS/push-to-docker-hub.sh
+    - $FACTORY_SCRIPTS/push-to-docker-hub.sh --clean
   environment:
     name: production
   dependencies:
@@ -122,7 +120,7 @@ release:
   stage: release
   script:
     - $FACTORY_SCRIPTS/release-image.sh lizmap-web-client
-    - $FACTORY_SCRIPTS/push-to-docker-hub.sh
+    - $FACTORY_SCRIPTS/push-to-docker-hub.sh --clean
   environment:
     name: production
   dependencies:
