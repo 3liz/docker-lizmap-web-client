@@ -34,7 +34,7 @@ cacheRootDirectory="/tmp/"
 allowUserAccountRequests=off
 
 ; path to find repositories
-rootRepositories=
+rootRepositories=/srv/projects
 
 ; Use relative path
 relativeWMSPath=true

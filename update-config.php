@@ -1,70 +1,86 @@
 #!/usr/bin/env php
 <?php
+require('/www/lib/jelix/utils/jIniFileModifier.class.php');
 
-function update_ini_file($filename, $update) {
+/**
+ * lizmapConfig.ini.php
+ */
+$lizmapConfig = new jIniFileModifier('/www/lizmap/var/config/lizmapConfig.ini.php');
 
-    $config = $update(parse_ini_file($filename, true));
-    $body  = ";<?php die(''); ?>\n;for security reasons , don't remove or modify the first line\n";
-    $body .= ";LAST UPDATED: ".date(DATE_RFC2822)."\n\n";
+$lizmapConfig->setValue('wmsServerURL', getenv('LIZMAP_WMSSERVERURL'), 'services');
+$lizmapConfig->setValue('cacheRedisHost', getenv('LIZMAP_CACHEREDISHOST'), 'services');
 
-    // write global variable
-    foreach ($config as $section => $content) {
-        if(!is_array($content)) {
-            $body .= "$section=$content\n";
-        }
+foreach(array(
+        'cacheRedisPort'    => 'LIZMAP_CACHEREDISPORT',
+        'cacheExpiration'   => 'LIZMAP_CACHEEXPIRATION',
+        'debugMode'         => 'LIZMAP_DEBUGMODE',
+        'cacheStorageType'  => 'LIZMAP_CACHESTORAGETYPE',
+        'cacheRedisDb'      => 'LIZMAP_CACHEREDISDB',
+        'cacheRedisKeyPrefix' => 'LIZMAP_CACHEREDISKEYPREFIX',
+        ) as $key => $envValue
+) {
+    if (getenv($envValue) !== false) {
+        $lizmapConfig->setValue($key, getenv($envValue), 'services');
     }
-
-    foreach ($config as $section => $content) {
-        if(!is_array($content)) continue;
-        $content = array_map(function($val,$key) {
-            return "$key=$val";
-        },array_values($content),array_keys($content));
-        $content = implode("\n", $content); // concat
-        $body .= "\n[$section]\n$content\n";
-    }
-    file_put_contents($filename, $body);    
 }
+$lizmapConfig->save();
 
-// Update localconfig 
-update_ini_file( 'lizmap/var/config/localconfig.ini.php', function($config) {
+/**
+ * localconfig.ini.php
+ */
+$localConfig = new jIniFileModifier('/www/lizmap/var/config/localconfig.ini.php');
 
 // Set up WPS configuration
-if ( getenv("LIZMAP_WPS_URL") ) {
-    $config['modules']['wps.access'] = '2';
-    $config['wps']['wps_rootUrl'] = getenv('LIZMAP_WPS_URL');
-    $config['wps']['ows_url']     = getenv('LIZMAP_WMSSERVERURL');
-    $config['wps']['wps_rootDirectories'] = "/srv/projects";
-    // Redis config
-    $config['wps']['redis_port'] = getenv('LIZMAP_CACHEREDISPORT') ?: 6379;
-    $config['wps']['redis_host'] = getenv('LIZMAP_CACHEREDISHOST') ?: 'redis';
-    $config['wps']['redis_db']   = getenv('LIZMAP_CACHEREDISDB')   ?: 1;
-    $config['wps']['redis_key_prefix'] = "wpslizmap";
+if (getenv("LIZMAP_WPS_URL") !== false) {
+    $localConfig->setValue('wps.access', 2, 'modules');
+    $localConfig->setValues(array(
+            'wps_rootUrl' => getenv('LIZMAP_WPS_URL'),
+            'ows_url'     => getenv('LIZMAP_WMSSERVERURL'),
+            'wps_rootDirectories' => "/srv/projects",
+            // Redis config
+            'redis_port' => getenv('LIZMAP_CACHEREDISPORT') ?: 6379,
+            'redis_host' => getenv('LIZMAP_CACHEREDISHOST') ?: 'redis',
+            'redis_db'   => getenv('LIZMAP_CACHEREDISDB')   ?: 1,
+            'redis_key_prefix' => "wpslizmap"
+        ),
+        'wps');
 } else {
-    $config['modules']['wps.access'] = '0';
+     $localConfig->setValue('wps.access', 0, 'modules');
 }
 
 // Set urlengine config
-unset($config['urlengine']);
-unset($config['forceHTTPSPort']);
 
-if(getenv('LIZMAP_PROXYURL_PROTOCOL')) {
-    $config['urlengine']['checkHttpsOnParsing'] = 'off';
-    $config['urlengine']['forceProxyProtocol']  = getenv('LIZMAP_PROXYURL_PROTOCOL');
-    // By default, use the 443 https port  
-    if(getenv('LIZMAP_PROXYURL_HTTPS_PORT')) $config['forceHTTPSPort'] = getenv('LIZMAP_PROXYURL_HTTPS_PORT');
-    else $config['forceHTTPSPort'] = '443';
+if (getenv('LIZMAP_PROXYURL_PROTOCOL') !== false) {
+    $localConfig->setValue('checkHttpsOnParsing', false, 'urlengine');
+    $localConfig->setValue('forceProxyProtocol', getenv('LIZMAP_PROXYURL_PROTOCOL'), 'urlengine');
+
+    // By default, use the 443 https port
+    if (getenv('LIZMAP_PROXYURL_HTTPS_PORT') !== false) {
+        $config['forceHTTPSPort'] = getenv('LIZMAP_PROXYURL_HTTPS_PORT');
+        $localConfig->setValue('forceHTTPSPort', getenv('LIZMAP_PROXYURL_HTTPS_PORT'));
+    }
+    else {
+        $localConfig->setValue('forceHTTPSPort', 443);
+    }
 }
 
-if(getenv('LIZMAP_PROXYURL_DOMAIN'))          $config['urlengine']['domainName']      = getenv('LIZMAP_PROXYURL_DOMAIN');
-if(getenv('LIZMAP_PROXYURL_BASEPATH'))        $config['urlengine']['basePath']        = getenv('LIZMAP_PROXYURL_BASEPATH');
-if(getenv('LIZMAP_PROXYURL_BACKENDBASEPATH')) $config['urlengine']['backendBasePath'] = getenv('LIZMAP_PROXYURL_BACKENDBASEPATH');
+if (getenv('LIZMAP_PROXYURL_DOMAIN') !== false) {
+    $localConfig->setValue('domainName', getenv('LIZMAP_PROXYURL_DOMAIN'), 'urlengine');
+}
 
-if(getenv('LIZMAP_THEME')) $config['theme'] = getenv('LIZMAP_THEME');
+if (getenv('LIZMAP_PROXYURL_BASEPATH') !== false) {
+    $localConfig->setValue('basePath', getenv('LIZMAP_PROXYURL_BASEPATH'), 'urlengine');
+}
 
-return $config;
+if (getenv('LIZMAP_PROXYURL_BACKENDBASEPATH') !== false) {
+    $localConfig->setValue('backendBasePath', getenv('LIZMAP_PROXYURL_BACKENDBASEPATH'), 'urlengine');
+}
 
-})
+if (getenv('LIZMAP_THEME') !== false) {
+    $localConfig->setValue('theme', getenv('LIZMAP_THEME'));
+}
+
+$localConfig->save();
 
 
 
-?>

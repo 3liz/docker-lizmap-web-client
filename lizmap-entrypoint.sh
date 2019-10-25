@@ -29,22 +29,7 @@ else
     mv lizmap/www.dist lizmap/www
 fi
 
-# Set configuration variables
-
-sed -i '/^hideSensitiveServicesProperties=/c\hideSensitiveServicesProperties=1' lizmap/var/config/lizmapConfig.ini.php
-sed -i '/^rootRepositories=/c\rootRepositories="/srv/projects"'                 lizmap/var/config/lizmapConfig.ini.php
-
-sed -i "/^wmsServerURL=/c\wmsServerURL=${LIZMAP_WMSSERVERURL}"       lizmap/var/config/lizmapConfig.ini.php
-sed -i "/^cacheRedisHost=/c\cacheRedisHost=${LIZMAP_CACHEREDISHOST}" lizmap/var/config/lizmapConfig.ini.php
-
-[ ! -z "$LIZMAP_CACHEREDISPORT" ]      && sed -i "/^cacheRedisPort=/c\cacheRedisPort=${LIZMAP_CACHEREDISPORT}"       lizmap/var/config/lizmapConfig.ini.php
-[ ! -z "$LIZMAP_CACHEEXPIRATION" ]     && sed -i "/^cacheExpiration=/c\cacheExpiration=${LIZMAP_CACHEEXPIRATION}"    lizmap/var/config/lizmapConfig.ini.php
-[ ! -z "$LIZMAP_DEBUGMODE" ]           && sed -i "/^debugMode=/c\debugMode=${LIZMAP_DEBUGMODE}"                      lizmap/var/config/lizmapConfig.ini.php
-[ ! -z "$LIZMAP_CACHESTORAGETYPE" ]    && sed -i "/^cacheStorageType=/c\cacheStorageType=${LIZMAP_CACHESTORAGETYPE}" lizmap/var/config/lizmapConfig.ini.php
-[ ! -z "$LIZMAP_CACHEREDISDB" ]        && sed -i "/^cacheRedisDb=/c\cacheRedisDb=${LIZMAP_CACHEREDISDB}"             lizmap/var/config/lizmapConfig.ini.php
-[ ! -z "$LIZMAP_CACHEREDISKEYPREFIX" ] && sed -i "/^cacheRedisKeyPrefix=/c\cacheRedisKeyPrefix=${LIZMAP_CACHEREDISKEYPREFIX}"  lizmap/var/config/lizmapConfig.ini.php
-
-# Update localconfig
+# Update localconfig and lizmapConfig
 update-config.php
 
 # Set up Configuration  
