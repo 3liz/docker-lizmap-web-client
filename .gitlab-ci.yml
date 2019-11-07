@@ -14,7 +14,7 @@ stages:
 build:ltr:
   stage: build
   script:
-    - make build deliver clean-all VERSION=3.2.7 VERSION_SHORT=3.2 RELEASE_TAG=ltr
+    - make build deliver clean-all VERSION=3.2.8 VERSION_SHORT=3.2 RELEASE_TAG=ltr
   environment:
     name: snap
   only:
