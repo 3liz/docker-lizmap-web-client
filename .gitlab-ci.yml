@@ -47,7 +47,7 @@ build:nightly_ltr:
 build:release:
   stage: build
   script:
-    - make build deliver clean-all VERSION=3.3.1 VERSION_SHORT=3.3 RELEASE_TAG=latest
+    - make build deliver clean-all VERSION=3.3.2 VERSION_SHORT=3.3 RELEASE_TAG=latest
   environment:
     name: snap
   only:
