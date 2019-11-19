@@ -80,6 +80,15 @@ if (getenv('LIZMAP_THEME') !== false) {
     $localConfig->setValue('theme', getenv('LIZMAP_THEME'));
 }
 
+
+// Update mail config
+
+$mailConfigFile = '/srv/etc/mailconfig.ini';
+if (file_exists($mailConfigFile)) {
+    $mailConfig = parse_ini_file($mailConfigFile, true);
+    $localConfig->setValues($mailConfig['mailer'], 'mailer');
+}
+
 $localConfig->save();
 
 
