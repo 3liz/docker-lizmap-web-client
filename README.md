@@ -1,7 +1,20 @@
+
+**THIS REPOSITORY IS DEPRECATED AND IS NOT MAINTAINED ANYMORE**
+
+It has been moved to https://github.com/3liz/lizmap-web-client/tree/master/docker.
+
+
+
+
+
+
 # Lizmap web client Docker image with WPS support
 
 The container deploy one lizmap instance and may run php-fpm on commande line.
 (cf [docker/php](https://hub.docker.com/_/php/) )
+
+
+
 
 
 ## Configuration variables
