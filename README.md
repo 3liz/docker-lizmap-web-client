@@ -3,9 +3,7 @@
 
 It has been moved to https://github.com/3liz/lizmap-web-client/tree/master/docker.
 
-
-
-
+Please open issue in https://github.com/3liz/lizmap-web-client for Lizmap related issues and https://github.com/3liz/lizmap-docker-compose for docker specific issues.
 
 
 # Lizmap web client Docker image with WPS support
